@@ -79,6 +79,10 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       });
       
       const fileData = await res.json();
+      if (!res.ok) {
+  console.error("Cloudinary Error:", fileData);
+  throw new Error(fileData.error?.message || "Upload failed");
+}
       const mediaUrl = fileData.url.toString();
 
       const config = { headers: { Authorization: `Bearer ${user.token}` } };
