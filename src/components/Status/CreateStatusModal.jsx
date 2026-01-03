@@ -9,7 +9,7 @@ const CreateStatusModal = ({ onClose, onSuccess }) => {
   const [caption, setCaption] = useState("");
   const [loading, setLoading] = useState(false);
   const { user } = ChatState();
-  const ENDPOINT = "http://localhost:5000"; // Ensure this matches
+  const ENDPOINT = "https://whatsapp-backend-rho-sepia.vercel.app"; // Ensure this matches
    var socket = io(ENDPOINT);
   const handleSubmit = async () => {
     if (!mediaUrl) {
@@ -24,7 +24,7 @@ const CreateStatusModal = ({ onClose, onSuccess }) => {
       const { data } = await api.post("/status", { mediaUrl, caption }, config);
       
       // FIX: Use the 'io' import, NOT require
-      const socket = io("http://localhost:5000"); 
+      const socket = io("https://whatsapp-backend-rho-sepia.vercel.app"); 
       socket.emit("new status", data); 
 
       setLoading(false);

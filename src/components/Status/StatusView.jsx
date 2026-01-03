@@ -6,7 +6,7 @@ import CreateStatusModal from "./CreateStatusModal";
 import StatusModal from "./StatusModal"; 
 import io from "socket.io-client";
 
-const ENDPOINT = "http://localhost:5000";
+const ENDPOINT = "https://whatsapp-backend-rho-sepia.vercel.app";
 var socket;
 
 const StatusView = () => {

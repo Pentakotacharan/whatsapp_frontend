@@ -53,10 +53,10 @@ const ProfileModal = ({ user, onClose }) => {
     if (pics.type === "image/jpeg" || pics.type === "image/png") {
       const data = new FormData();
       data.append("file", pics);
-      data.append("upload_preset", "YOUR_UPLOAD_PRESET_HERE"); 
-      data.append("cloud_name", "YOUR_CLOUD_NAME_HERE");
+      data.append("upload_preset", "sbheume7"); 
+      data.append("cloud_name", "dsxn4zfz6");
 
-      fetch("https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME_HERE/image/upload", {
+      fetch("https://api.cloudinary.com/v1_1/dsxn4zfz6/image/upload", {
         method: "post",
         body: data,
       })
