@@ -1,7 +1,7 @@
 import io from "socket.io-client";
 
 // Replace with your actual backend URL
-const ENDPOINT = "http://localhost:5000"; 
+const ENDPOINT = "https://whatsapp-backend-rho-sepia.vercel.app/"; 
 
 // Create a socket instance
 export const socket = io(ENDPOINT, {

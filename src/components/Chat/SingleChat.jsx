@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 import { FaEye } from "react-icons/fa"; 
 import GroupInfoModal from "./GroupInfoModal"; 
 
-const ENDPOINT = "http://localhost:5000"; 
+const ENDPOINT = "https://whatsapp-backend-rho-sepia.vercel.app/"; 
 let socket, selectedChatCompare;
 
 // 1. ADD PROPS HERE
