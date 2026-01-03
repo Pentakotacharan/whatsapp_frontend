@@ -54,7 +54,7 @@ const GroupChatModal = ({ children }) => {
       
       // Emit socket event if you have socket logic
       const io = require("socket.io-client");
-      const socket = io("http://localhost:5000");
+      const socket = io("https://whatsapp-backend-rho-sepia.vercel.app");
       socket.emit("new group", data);
 
       setIsOpen(false); // Close modal on success

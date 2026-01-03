@@ -12,7 +12,7 @@ import CreateCommunityModal from "../Communities/CreateCommunityModal"; // <--- 
 import CommunityList from "../Communities/CommunityList";
 import StatusView from "../Status/StatusView";
 
-const ENDPOINT = "https://whatsapp-backend-rho-sepia.vercel.app/";
+const ENDPOINT = "https://whatsapp-backend-rho-sepia.vercel.app";
 let socket;
 
 const MyChats = () => {
