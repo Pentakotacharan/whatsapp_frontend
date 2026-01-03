@@ -69,11 +69,11 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     const data = new FormData();
     data.append("file", file);
     data.append("upload_preset", "sbheume7"); 
-    data.append("cloud_name", "dsxn4zfz");       
+    data.append("cloud_name", "dsxn4zfz6");       
 
     try {
       const resourceType = type === "video" ? "video" : "image";
-      const res = await fetch(`https://api.cloudinary.com/v1_1/dsxn4zfz/${resourceType}/upload`, {
+      const res = await fetch(`https://api.cloudinary.com/v1_1/dsxn4zfz6/${resourceType}/upload`, {
         method: "post",
         body: data,
       });
