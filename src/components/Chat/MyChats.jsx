@@ -4,9 +4,13 @@ import { toast } from "react-toastify";
 import api from "../../config/api";
 import io from "socket.io-client";
 import { FaPlus, FaUsers, FaComments, FaLayerGroup } from "react-icons/fa";
+
+// IMPORTS FOR MODALS
 import GroupChatModal from "./GroupChatModal";
+import UserSearchModal from "./UserSearchModal"; // <--- NEW
+import CreateCommunityModal from "../Communities/CreateCommunityModal"; // <--- NEW
 import CommunityList from "../Communities/CommunityList";
-import StatusView from "../Status/StatusView"; // <--- 1. IMPORT ADDED
+import StatusView from "../Status/StatusView";
 
 const ENDPOINT = "http://localhost:5000";
 let socket;
@@ -14,9 +18,8 @@ let socket;
 const MyChats = () => {
   const [loggedUser, setLoggedUser] = useState();
   const { selectedChat, setSelectedChat, user, chats, setChats } = ChatState();
-  const [activeTab, setActiveTab] = useState("chats"); // "chats" | "groups" | "communities"
+  const [activeTab, setActiveTab] = useState("chats"); 
 
-  // Fetch all chats
   const fetchChats = async () => {
     try {
       const config = { headers: { Authorization: `Bearer ${user.token}` } };
@@ -30,12 +33,9 @@ const MyChats = () => {
   useEffect(() => {
     setLoggedUser(JSON.parse(localStorage.getItem("userInfo")));
     fetchChats();
-    
     socket = io(ENDPOINT);
     socket.emit("setup", user);
-    socket.on("refetch chats", () => {
-        fetchChats();
-    });
+    socket.on("refetch chats", () => fetchChats());
   }, [user]);
 
   const getSender = (loggedUser, users) => {
@@ -52,66 +52,53 @@ const MyChats = () => {
   const groupChats = chats.filter((c) => c.isGroupChat);
 
   return (
-    <div 
-      className={`
-        flex-col 
-        bg-white 
-        w-full 
-        md:w-[31%] 
-        h-full 
-        rounded-none 
-        border-0 
-        md:rounded-lg 
-        md:border 
-        border-gray-200 
-        
-        overflow-hidden
-        ${selectedChat ? "hidden md:flex" : "flex"} 
-      `}
-    >
-      {/* --- HEADER --- */}
+    <div className={`flex flex-col bg-white w-full md:w-[31%] h-full rounded-none border-0 md:rounded-lg md:border border-gray-200 overflow-hidden ${selectedChat ? "hidden md:flex" : "flex"}`}>
+      
+      {/* --- HEADER WITH DYNAMIC BUTTONS --- */}
       <div className="px-3 py-3 flex justify-between items-center bg-gray-50 border-b">
-        <h2 className="text-xl font-bold text-gray-800 font-sans">
-            {activeTab === "chats" ? "Chats" : activeTab === "groups" ? "Groups" : "Communities"}
+        <h2 className="text-xl font-bold text-gray-800 font-sans capitalize">
+            {activeTab}
         </h2>
         
-        {activeTab !== "communities" && (
+        {/* BUTTON LOGIC */}
+        {activeTab === "chats" && (
+            <UserSearchModal>
+                <button className="flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white px-3 py-1.5 rounded-md text-sm transition font-medium shadow-sm">
+                    <FaPlus className="text-xs" /> New Chat
+                </button>
+            </UserSearchModal>
+        )}
+
+        {activeTab === "groups" && (
             <GroupChatModal>
-                <button className="flex items-center gap-2 bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1.5 rounded-md text-sm transition font-medium">
+                <button className="flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white px-3 py-1.5 rounded-md text-sm transition font-medium">
                     <FaPlus className="text-xs" /> New Group
                 </button>
             </GroupChatModal>
+        )}
+
+        {activeTab === "communities" && (
+            <CreateCommunityModal>
+                <button className="flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white px-3 py-1.5 rounded-md text-sm transition font-medium">
+                    <FaPlus className="text-xs" /> New Community
+                </button>
+            </CreateCommunityModal>
         )}
       </div>
 
       {/* --- TABS --- */}
       <div className="flex justify-around items-center bg-white border-b border-gray-100 sticky top-0 z-10">
-        <button 
-            onClick={() => setActiveTab("chats")}
-            className={`flex-1 py-3 text-sm font-medium flex justify-center items-center gap-2 transition relative ${
-                activeTab === "chats" ? "text-teal-600" : "text-gray-500 hover:bg-gray-50"
-            }`}
-        >
+        <button onClick={() => setActiveTab("chats")} className={`flex-1 py-3 text-sm font-medium flex justify-center items-center gap-2 transition relative ${activeTab === "chats" ? "text-teal-600" : "text-gray-500 hover:bg-gray-50"}`}>
             <FaComments /> Chats
             {activeTab === "chats" && <div className="absolute bottom-0 w-full h-[3px] bg-teal-600 rounded-t-full"></div>}
         </button>
 
-        <button 
-            onClick={() => setActiveTab("groups")}
-            className={`flex-1 py-3 text-sm font-medium flex justify-center items-center gap-2 transition relative ${
-                activeTab === "groups" ? "text-teal-600" : "text-gray-500 hover:bg-gray-50"
-            }`}
-        >
+        <button onClick={() => setActiveTab("groups")} className={`flex-1 py-3 text-sm font-medium flex justify-center items-center gap-2 transition relative ${activeTab === "groups" ? "text-teal-600" : "text-gray-500 hover:bg-gray-50"}`}>
             <FaLayerGroup /> Groups
             {activeTab === "groups" && <div className="absolute bottom-0 w-full h-[3px] bg-teal-600 rounded-t-full"></div>}
         </button>
 
-        <button 
-            onClick={() => setActiveTab("communities")}
-            className={`flex-1 py-3 text-sm font-medium flex justify-center items-center gap-2 transition relative ${
-                activeTab === "communities" ? "text-teal-600" : "text-gray-500 hover:bg-gray-50"
-            }`}
-        >
+        <button onClick={() => setActiveTab("communities")} className={`flex-1 py-3 text-sm font-medium flex justify-center items-center gap-2 transition relative ${activeTab === "communities" ? "text-teal-600" : "text-gray-500 hover:bg-gray-50"}`}>
             <FaUsers /> Community
             {activeTab === "communities" && <div className="absolute bottom-0 w-full h-[3px] bg-teal-600 rounded-t-full"></div>}
         </button>
@@ -124,30 +111,13 @@ const MyChats = () => {
             <div className="p-2"><CommunityList /></div>
         ) : (
             <div className="flex flex-col">
-                
-                {/* --- 2. STATUS BAR (Only visible in Chats tab) --- */}
-                {activeTab === "chats" && (
-                    <div className="mb-2">
-                        <StatusView />
-                    </div>
-                )}
+                {activeTab === "chats" && <div className="mb-2"><StatusView /></div>}
 
-                {/* CHAT LIST */}
                 <div className="px-2 pb-2 flex flex-col gap-1">
                     {(activeTab === "chats" ? allChats : groupChats).map((chat) => (
-                        <div
-                            key={chat._id}
-                            onClick={() => setSelectedChat(chat)}
-                            className={`cursor-pointer px-3 py-3 rounded-lg flex items-center gap-3 transition-colors ${
-                                selectedChat === chat ? "bg-teal-50" : "hover:bg-gray-50"
-                            }`}
-                        >
+                        <div key={chat._id} onClick={() => setSelectedChat(chat)} className={`cursor-pointer px-3 py-3 rounded-lg flex items-center gap-3 transition-colors ${selectedChat === chat ? "bg-teal-50" : "hover:bg-gray-50"}`}>
                             <div className="relative w-12 h-12 flex-shrink-0">
-                                <img 
-                                    src={!chat.isGroupChat ? getSenderPic(loggedUser, chat.users) : "https://cdn-icons-png.flaticon.com/512/166/166258.png"}
-                                    alt="avatar" 
-                                    className="w-full h-full rounded-full object-cover border border-gray-100"
-                                />
+                                <img src={!chat.isGroupChat ? getSenderPic(loggedUser, chat.users) : "https://cdn-icons-png.flaticon.com/512/166/166258.png"} alt="avatar" className="w-full h-full rounded-full object-cover border border-gray-100"/>
                             </div>
                             <div className="flex-1 min-w-0">
                                 <div className="flex justify-between items-baseline mb-1">
@@ -162,27 +132,12 @@ const MyChats = () => {
                                 </div>
                                 <p className="text-sm text-gray-500 truncate">
                                     {chat.latestMessage ? (
-                                        <span>
-                                            {chat.isGroupChat && <span className="font-bold text-gray-700">{chat.latestMessage.sender.name}: </span>}
-                                            {chat.latestMessage.content.length > 35 
-                                                ? chat.latestMessage.content.substring(0, 36) + "..." 
-                                                : chat.latestMessage.content
-                                            }
-                                        </span>
-                                    ) : (
-                                        <span className="italic text-gray-400">No messages yet</span>
-                                    )}
+                                        <span>{chat.isGroupChat && <span className="font-bold text-gray-700">{chat.latestMessage.sender.name}: </span>}{chat.latestMessage.content.substring(0, 36)}</span>
+                                    ) : <span className="italic text-gray-400">No messages yet</span>}
                                 </p>
                             </div>
                         </div>
                     ))}
-                    
-                    {(activeTab === "groups" && groupChats.length === 0) && (
-                        <div className="text-center mt-10 text-gray-400 text-sm">
-                            <FaLayerGroup size={30} className="mx-auto mb-2 opacity-50"/>
-                            No groups joined yet.
-                        </div>
-                    )}
                 </div>
             </div>
         )}
